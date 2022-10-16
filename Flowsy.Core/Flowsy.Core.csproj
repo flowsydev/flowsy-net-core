@@ -1,0 +1,15 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net6.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+        <PackageLicenseExpression>MIT</PackageLicenseExpression>
+        <NoWarn>$(NoWarn);NU5118;NU5128</NoWarn>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <PackageReference Include="CaseExtensions" Version="1.1.0" />
+    </ItemGroup>
+
+</Project>
