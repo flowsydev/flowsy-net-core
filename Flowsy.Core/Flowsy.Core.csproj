@@ -6,9 +6,12 @@
         <Nullable>enable</Nullable>
 
         <Title>Flowsy Core</Title>
-        <Description>Basic functionality shared by all the Flowsy libraries</Description>
+        <Description>Basic functionality for Flowsy-based projects.</Description>
+
+        <RepositoryType>git</RepositoryType>
+        <RepositoryUrl>https://github.com/flowsydev/flowsy-net-core</RepositoryUrl>
         
-        <PackageVersion>1.0.1</PackageVersion>
+        <PackageVersion>1.0.3</PackageVersion>
         <PackageLicenseExpression>MIT</PackageLicenseExpression>
         <PackageReadmeFile>README.md</PackageReadmeFile>
         

@@ -16,16 +16,7 @@ PROJECT_FILE=$(find . -type f -iname "*.csproj" | grep -v ".Test.")
 PROJECT_DIR=$(dirname "$PROJECT_FILE")
 
 PACKAGE_DIR="$PROJECT_DIR/bin/$BUILD_CONFIG"
-PACKAGE_TITLE=$(grep -oE '<Title>(.+)</Title>' "$PROJECT_FILE" | sed -nr 's/<Title>(.+)<\/Title>/\1/p')
-PACKAGE_DESCRIPTION=$(grep -oE '<Description>(.+)</Description>' "$PROJECT_FILE" | sed -nr 's/<Description>(.+)<\/Description>/\1/p')
 PACKAGE_VERSION=$(grep -oE '<PackageVersion>(.+)</PackageVersion>' "$PROJECT_FILE" | sed -nr 's/<PackageVersion>(.+)<\/PackageVersion>/\1/p')
-
-{ \
-  sed -i '' -r "s/(<title>)(.*)(<\/title>)/\1${PACKAGE_TITLE}\3/g" "$PROJECT_DIR/.nuspec" && \
-  sed -i '' -r "s/(<description>)(.*)(<\/description>)/\1${PACKAGE_DESCRIPTION}\3/g" "$PROJECT_DIR/.nuspec" && \
-  sed -i '' -r "s/(<version>)(.*)(<\/version>)/\1${PACKAGE_VERSION}\3/g" "$PROJECT_DIR/.nuspec"
-} || \
-  { echo "Could not update package information in .nuspec file" && exit 1; }
 
 { dotnet clean --configuration "$BUILD_CONFIG" && \
   dotnet pack "$PROJECT_FILE" --configuration "$BUILD_CONFIG" --include-symbols; } \
@@ -34,7 +25,7 @@ PACKAGE_VERSION=$(grep -oE '<PackageVersion>(.+)</PackageVersion>' "$PROJECT_FIL
 echo
 echo
 
-read -r -s -p "API KEY: " API_KEY
+read -r -s -p "API KEY for $PACKAGE_SOURCE: " API_KEY
 [[ -z "$API_KEY" ]] && echo "API Key is mandatory" && exit 1
 
 echo
