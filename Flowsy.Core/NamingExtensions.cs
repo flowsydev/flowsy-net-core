@@ -4,7 +4,7 @@ namespace Flowsy.Core;
 
 public static class NamingExtensions
 {
-    public static string ApplyNamingConvention(this string str, NamingConvention convention)
+    public static string ApplyNamingConvention(this string str, NamingConvention? convention)
         => convention switch
         {
             NamingConvention.CamelCase => str.ToCamelCase(),

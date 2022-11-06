@@ -7,10 +7,12 @@ public static class StreamExtensions
         if (stream.Length == 0)
             return Array.Empty<byte>();
 
-        var position = stream.Position;
-
+        long? position = null;
         if (stream.CanSeek)
+        {
+            position = stream.Position;
             stream.Seek(0, SeekOrigin.Begin);
+        }
         
         var bytes = new byte[stream.Length];
         int b;
@@ -19,8 +21,8 @@ public static class StreamExtensions
         while ((b = stream.ReadByte()) >= 0)
             bytes[i++] = (byte) b;
         
-        if (stream.CanSeek)
-            stream.Seek(position, SeekOrigin.Begin);
+        if (position is not null)
+            stream.Seek(position.Value, SeekOrigin.Begin);
         
         return bytes;
     }
