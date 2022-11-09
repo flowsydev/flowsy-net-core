@@ -15,14 +15,36 @@ public static class StreamExtensions
 
         var memoryOwner = MemoryPool<byte>.Shared.Rent();
         var memory = memoryOwner.Memory;
+        var bytes = new List<byte>();
 
-        int b, i = 0;
-        while ((b = stream.ReadByte()) >= 0)
-            memory.Span[i++] = (byte) b; 
-        
+        while (stream.Read(memory.Span) > 0)
+            bytes.AddRange(memory.ToArray());
+
         if (position is not null)
             stream.Seek(position.Value, SeekOrigin.Begin);
         
-        return memory.ToArray();
+        return bytes.ToArray();
+    }
+    
+    public static async Task<byte[]> ToArrayAsync(this Stream stream, CancellationToken cancellationToken)
+    {
+        long? position = null;
+        if (stream.CanSeek)
+        {
+            position = stream.Position;
+            stream.Seek(0, SeekOrigin.Begin);
+        }
+
+        var memoryOwner = MemoryPool<byte>.Shared.Rent();
+        var memory = memoryOwner.Memory;
+        var bytes = new List<byte>();
+
+        while (await stream.ReadAsync(memory, cancellationToken) > 0)
+            bytes.AddRange(memory.ToArray());
+
+        if (position is not null)
+            stream.Seek(position.Value, SeekOrigin.Begin);
+        
+        return bytes.ToArray();
     }
 }
