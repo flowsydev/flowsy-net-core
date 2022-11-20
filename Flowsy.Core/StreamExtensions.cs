@@ -13,12 +13,14 @@ public static class StreamExtensions
             stream.Seek(0, SeekOrigin.Begin);
         }
 
-        var memoryOwner = MemoryPool<byte>.Shared.Rent();
-        var memory = memoryOwner.Memory;
+        var buffer = ArrayPool<byte>.Shared.Rent(4096);
+        var bytesRead = 0;
         var bytes = new List<byte>();
 
-        while (stream.Read(memory.Span) > 0)
-            bytes.AddRange(memory.ToArray());
+        while ((bytesRead = stream.Read(buffer, 0, buffer.Length)) > 0)
+            bytes.AddRange(buffer.Take(bytesRead));
+        
+        ArrayPool<byte>.Shared.Return(buffer);
 
         if (position is not null)
             stream.Seek(position.Value, SeekOrigin.Begin);
@@ -35,12 +37,14 @@ public static class StreamExtensions
             stream.Seek(0, SeekOrigin.Begin);
         }
 
-        var memoryOwner = MemoryPool<byte>.Shared.Rent();
-        var memory = memoryOwner.Memory;
+        var buffer = ArrayPool<byte>.Shared.Rent(4096);
+        var bytesRead = 0;
         var bytes = new List<byte>();
 
-        while (await stream.ReadAsync(memory, cancellationToken) > 0)
-            bytes.AddRange(memory.ToArray());
+        while ((bytesRead = await stream.ReadAsync(buffer, cancellationToken)) > 0)
+            bytes.AddRange(buffer.Take(bytesRead));
+
+        ArrayPool<byte>.Shared.Return(buffer);
 
         if (position is not null)
             stream.Seek(position.Value, SeekOrigin.Begin);
