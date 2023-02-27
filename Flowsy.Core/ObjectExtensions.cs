@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Reflection;
 
 namespace Flowsy.Core;
@@ -6,12 +7,26 @@ public static class ObjectExtensions
 {
     public static IDictionary<string, object?> ToDictionary(this object obj)
     {
-        var dictionary = new Dictionary<string, object?>();
+        if (obj is IDictionary<string, object?> dictionary)
+            return dictionary;
         
+        var newDictionary = new Dictionary<string, object?>();
+        
+        if (obj is IDictionary genericDictionary)
+        {
+            foreach (var k in genericDictionary.Keys.OfType<object>().Select(k => k.ToString()))
+            {
+                if (k is null) continue;
+                newDictionary[k] = genericDictionary[k];
+            }
+
+            return newDictionary;
+        }
+
         foreach (var property in obj.GetType().GetRuntimeProperties())
-            dictionary[property.Name] = property.GetValue(obj);
+            newDictionary[property.Name] = property.GetValue(obj);
         
-        return dictionary;
+        return newDictionary;
     }
 
     public static IReadOnlyDictionary<string, object?> ToReadonlyDictionary(this object obj)
