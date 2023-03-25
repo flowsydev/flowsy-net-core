@@ -1,7 +1,24 @@
+using CaseExtensions;
+
 namespace Flowsy.Core;
 
 public static class StringExtensions
 {
+    public static string ApplyNamingConvention(this string str, NamingConvention? convention)
+        => convention switch
+        {
+            NamingConvention.LowerCase => str.ToLower(),
+            NamingConvention.UpperCase => str.ToUpper(),
+            NamingConvention.CamelCase => str.ToCamelCase(),
+            NamingConvention.PascalCase => str.ToPascalCase(),
+            NamingConvention.LowerKebabCase => str.ToKebabCase(),
+            NamingConvention.UpperKebabCase => str.ToKebabCase().ToUpper(),
+            NamingConvention.LowerSnakeCase => str.ToSnakeCase(),
+            NamingConvention.UpperSnakeCase => str.ToSnakeCase().ToUpper(),
+            NamingConvention.TrainCase => str.ToTrainCase(),
+            _ => str
+        };
+    
     public static bool TryConvert<T>(this string str, out T? value)
     {
         try
