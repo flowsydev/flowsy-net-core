@@ -1,7 +1,5 @@
 #!/usr/bin/env bash
 
-DOTNET=/usr/local/share/dotnet/dotnet
-
 DEF_BUILD_CONFIG=Release
 DEF_PACKAGE_SOURCE="https://api.nuget.org/v3/index.json"
 
@@ -20,8 +18,8 @@ PROJECT_DIR=$(dirname "$PROJECT_FILE")
 PACKAGE_DIR="$PROJECT_DIR/bin/$BUILD_CONFIG"
 PACKAGE_VERSION=$(grep -oE '<PackageVersion>(.+)</PackageVersion>' "$PROJECT_FILE" | sed -nr 's/<PackageVersion>(.+)<\/PackageVersion>/\1/p')
 
-{ "$DOTNET" clean --configuration "$BUILD_CONFIG" && \
-  "$DOTNET" pack "$PROJECT_FILE" --configuration "$BUILD_CONFIG" --include-symbols; } \
+{ dotnet clean --configuration "$BUILD_CONFIG" && \
+  dotnet pack "$PROJECT_FILE" --configuration "$BUILD_CONFIG" --include-symbols; } \
   || { echo "Could not create packages" && exit 1; }
 
 echo
