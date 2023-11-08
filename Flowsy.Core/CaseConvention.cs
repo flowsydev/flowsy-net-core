@@ -1,6 +1,6 @@
 namespace Flowsy.Core;
 
-public enum NamingConvention
+public enum CaseConvention
 {
     LowerCase,
     UpperCase,
